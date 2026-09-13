@@ -1,6 +1,6 @@
 {
   "package": "audit-v1",
-  "exportedAt": "2026-09-13T12:11:20.649Z",
+  "exportedAt": "2026-09-13T13:38:11.807Z",
   "operator": "林岚",
   "state": {
     "version": 2,
@@ -103,18 +103,18 @@
     ],
     "seals": {
       "demo-dive-02": {
-        "id": "a352502c-0d43-4ea2-aa26-d9e6895f61f1",
+        "id": "33a3d12a-64ac-438e-8336-4cfa716fa65c",
         "diveId": "demo-dive-02",
         "diveCode": "DIVE-02",
-        "sealedAt": "2026-09-13T12:11:20.272Z",
+        "sealedAt": "2026-09-13T13:38:11.444Z",
         "operator": "林岚",
         "ruleVersion": "rules-v1",
-        "checksum": "bad2ca0011519c9a521850fcc186eaa14a736ee4e6bc33d1e432b43e47c7cf30",
-        "code": "bad2ca001151",
+        "checksum": "db6ae3eb60d12a64d5293a4b7083bc4785f1732c615a7b231d623a2b1a4950d3",
+        "code": "db6ae3eb60d1",
         "canonicalLength": 681,
         "warnings": [],
         "snapshot": {
-          "sealedAt": "2026-09-13T12:11:20.272Z",
+          "sealedAt": "2026-09-13T13:38:11.444Z",
           "ruleVersion": "rules-v1",
           "limits": {
             "maxDepth": 40,
@@ -173,8 +173,8 @@
     "reviews": {
       "demo-dive-02": [
         {
-          "id": "a9b18c78-cc92-4589-8adb-6906bbe7756c",
-          "at": "2026-09-13T12:11:20.483Z",
+          "id": "5e096971-a6da-42bf-b150-2d1aa0aa6fad",
+          "at": "2026-09-13T13:38:11.660Z",
           "author": "周牧",
           "note": "手机端现场复查：木构件稳定",
           "changes": [
@@ -185,21 +185,21 @@
               "action": ""
             }
           ],
-          "prevHash": "bad2ca0011519c9a521850fcc186eaa14a736ee4e6bc33d1e432b43e47c7cf30",
-          "hash": "b0d7e511"
+          "prevHash": "db6ae3eb60d12a64d5293a4b7083bc4785f1732c615a7b231d623a2b1a4950d3",
+          "hash": "f104dbb0"
         }
       ]
     },
     "auditLog": [
       {
-        "id": "10960093-66ee-4828-863a-ca7ea99ec26b",
-        "at": "2026-09-13T12:11:15.514Z",
+        "id": "440ee634-c6c8-479d-83cc-ebe3a6a628de",
+        "at": "2026-09-13T13:38:06.673Z",
         "action": "init/migrate",
         "detail": {}
       },
       {
-        "id": "ea245091-2300-4555-ba97-f2dfa0c2d9c2",
-        "at": "2026-09-13T12:11:15.649Z",
+        "id": "b758210b-1506-44a1-9dae-7f0800e26f41",
+        "at": "2026-09-13T13:38:06.808Z",
         "action": "dive.update",
         "detail": {
           "id": "demo-dive-02",
@@ -207,35 +207,35 @@
         }
       },
       {
-        "id": "ada57082-2c19-40ad-b700-42107bc1effd",
-        "at": "2026-09-13T12:11:20.274Z",
+        "id": "1a2f6cf9-9830-46df-a1bd-92c504ef5be9",
+        "at": "2026-09-13T13:38:11.444Z",
         "action": "dive.seal",
         "detail": {
           "diveId": "demo-dive-02",
           "diveCode": "DIVE-02",
-          "code": "bad2ca001151",
-          "checksum": "bad2ca0011519c9a521850fcc186eaa14a736ee4e6bc33d1e432b43e47c7cf30"
+          "code": "db6ae3eb60d1",
+          "checksum": "db6ae3eb60d12a64d5293a4b7083bc4785f1732c615a7b231d623a2b1a4950d3"
         }
       },
       {
-        "id": "d76718b6-19c5-47c4-b062-ce7599e16023",
-        "at": "2026-09-13T12:11:20.483Z",
+        "id": "f6e0e73e-a641-4a28-8529-9c375c260867",
+        "at": "2026-09-13T13:38:11.660Z",
         "action": "review.add",
         "detail": {
           "diveId": "demo-dive-02",
-          "reviewId": "a9b18c78-cc92-4589-8adb-6906bbe7756c"
+          "reviewId": "5e096971-a6da-42bf-b150-2d1aa0aa6fad"
         }
       }
     ]
   },
   "sealChecks": {
     "demo-dive-02": {
-      "code": "bad2ca001151",
-      "checksum": "bad2ca0011519c9a521850fcc186eaa14a736ee4e6bc33d1e432b43e47c7cf30",
+      "code": "db6ae3eb60d1",
+      "checksum": "db6ae3eb60d12a64d5293a4b7083bc4785f1732c615a7b231d623a2b1a4950d3",
       "ok": true,
       "reviewChain": true
     }
   },
-  "checksum": "40b9112db191f68423a4a561d6ddae085cfb31db971750468fa3dc92e52af5b6",
-  "code": "40b9112db191"
+  "checksum": "c4e2c5d97550bba2e912336800bfe8e1b63b5b11a639540cd4fc131bcd41a3fc",
+  "code": "c4e2c5d97550"
 }

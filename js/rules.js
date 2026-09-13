@@ -188,16 +188,35 @@
     return { ok: errors.length === 0, errors: errors, warnings: warnings };
   }
 
-  /** 追加复查前的轻量校验：复查必须有作者与正文，且只能针对已封存潜次。 */
+  /** 追加复查前的轻量校验：复查必须有作者与正文，且只能针对已封存潜次；
+   * 观测行引用的标记编号必须存在于该潜次的封存快照中（封存后标记集只读，不得新增）。 */
   function validateReview(state, diveId, review) {
     var errors = [];
-    if (!state.seals[diveId]) errors.push(issue("error", "NOT_SEALED", "潜次尚未封存，不能追加复查"));
+    var seal = state.seals[diveId];
+    if (!seal) errors.push(issue("error", "NOT_SEALED", "潜次尚未封存，不能追加复查"));
     if (!review || !nonEmpty(review.author)) errors.push(issue("error", "REVIEW_AUTHOR_MISSING", "复查人缺失"));
     if (!review || !nonEmpty(review.note)) errors.push(issue("error", "REVIEW_NOTE_MISSING", "复查内容缺失"));
+    var snapshotCodes = null;
+    if (seal && seal.snapshot && Array.isArray(seal.snapshot.marks)) {
+      snapshotCodes = Object.create(null);
+      seal.snapshot.marks.forEach(function (m) {
+        snapshotCodes[String(m.code || "").trim().toUpperCase()] = true;
+      });
+    }
     if (review && Array.isArray(review.changes)) {
+      var seen = Object.create(null);
       review.changes.forEach(function (ch, i) {
-        if (!nonEmpty(ch.code)) errors.push(issue("error", "REVIEW_CHANGE_CODE_MISSING", "第" + (i + 1) + "条复查记录缺少标记编号"));
-        if (!nonEmpty(ch.observation)) errors.push(issue("error", "REVIEW_CHANGE_OBS_MISSING", "复查记录 " + (ch.code || i + 1) + " 缺少观测说明"));
+        var codeKey = ch && ch.code ? String(ch.code).trim().toUpperCase() : "";
+        if (!nonEmpty(ch && ch.code)) {
+          errors.push(issue("error", "REVIEW_CHANGE_CODE_MISSING", "第" + (i + 1) + "条复查记录缺少标记编号"));
+        } else {
+          if (snapshotCodes && !snapshotCodes[codeKey]) {
+            errors.push(issue("error", "REVIEW_CHANGE_CODE_UNKNOWN", "复查引用的标记 " + ch.code + " 不在该潜次的封存快照中，不能引用"));
+          }
+          if (seen[codeKey]) errors.push(issue("error", "REVIEW_CHANGE_DUPLICATE", "同一次复查中标记 " + ch.code + " 出现多条观测，请合并为一条"));
+          seen[codeKey] = true;
+        }
+        if (!nonEmpty(ch && ch.observation)) errors.push(issue("error", "REVIEW_CHANGE_OBS_MISSING", "复查记录 " + ((ch && ch.code) || i + 1) + " 缺少观测说明"));
       });
     }
     return { ok: errors.length === 0, errors: errors };

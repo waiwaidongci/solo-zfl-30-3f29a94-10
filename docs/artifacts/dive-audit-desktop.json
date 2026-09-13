@@ -1,6 +1,6 @@
 {
   "package": "audit-v1",
-  "exportedAt": "2026-09-13T12:11:15.067Z",
+  "exportedAt": "2026-09-13T13:38:06.041Z",
   "operator": "现场监督林岚",
   "state": {
     "version": 2,
@@ -101,7 +101,7 @@
         "note": "靠近船肋"
       },
       {
-        "id": "3928b57c-1ffe-4a7c-ab18-2f314c8c1887",
+        "id": "cb077405-b4ea-4ea4-a1cd-37bef5f65669",
         "code": "B-100",
         "type": "ceramic",
         "dive": "DIVE-01",
@@ -117,18 +117,18 @@
     ],
     "seals": {
       "demo-dive-01": {
-        "id": "7eadff60-1aad-4a3d-b060-f71c173f4414",
+        "id": "0b4f1d12-d137-4068-8665-f126968024df",
         "diveId": "demo-dive-01",
         "diveCode": "DIVE-01",
-        "sealedAt": "2026-09-13T12:11:14.486Z",
+        "sealedAt": "2026-09-13T13:38:05.367Z",
         "operator": "现场监督林岚",
         "ruleVersion": "rules-v1",
-        "checksum": "4d01767f8f6a4d6c45f7042d13798514710f42bcea0ef76189a999e71beea16c",
-        "code": "4d01767f8f6a",
+        "checksum": "028049a3431d4faf1b9f19f34951943c4b6a49cae285d3f71ce0c5684b96279f",
+        "code": "028049a3431d",
         "canonicalLength": 941,
         "warnings": [],
         "snapshot": {
-          "sealedAt": "2026-09-13T12:11:14.486Z",
+          "sealedAt": "2026-09-13T13:38:05.367Z",
           "ruleVersion": "rules-v1",
           "limits": {
             "maxDepth": 40,
@@ -185,7 +185,7 @@
               "note": "靠近船肋"
             },
             {
-              "id": "3928b57c-1ffe-4a7c-ab18-2f314c8c1887",
+              "id": "cb077405-b4ea-4ea4-a1cd-37bef5f65669",
               "code": "B-100",
               "type": "ceramic",
               "dive": "DIVE-01",
@@ -206,8 +206,8 @@
     "reviews": {
       "demo-dive-01": [
         {
-          "id": "d48692b3-b2f7-4100-8dab-89d9887de406",
-          "at": "2026-09-13T12:11:14.702Z",
+          "id": "e720a0d3-b5e3-490b-a354-c0503b20cf56",
+          "at": "2026-09-13T13:38:05.625Z",
           "author": "复查员周牧",
           "note": "季度复查：B-100 附着物增加",
           "changes": [
@@ -218,30 +218,30 @@
               "action": ""
             }
           ],
-          "prevHash": "4d01767f8f6a4d6c45f7042d13798514710f42bcea0ef76189a999e71beea16c",
-          "hash": "6566c994"
+          "prevHash": "028049a3431d4faf1b9f19f34951943c4b6a49cae285d3f71ce0c5684b96279f",
+          "hash": "bd53bb99"
         }
       ]
     },
     "auditLog": [
       {
-        "id": "00a35dd4-2d1b-4c84-8ef9-68df5f5fe8e7",
-        "at": "2026-09-13T12:11:09.511Z",
+        "id": "fa153399-bdb2-41bc-a032-381809ae14f5",
+        "at": "2026-09-13T13:38:00.405Z",
         "action": "init/migrate",
         "detail": {}
       },
       {
-        "id": "978c69b9-feb2-4a08-82bd-cb70ecb75c63",
-        "at": "2026-09-13T12:11:09.634Z",
+        "id": "81b05339-11d2-468e-8592-d9a72c42637a",
+        "at": "2026-09-13T13:38:00.491Z",
         "action": "mark.create",
         "detail": {
-          "id": "3928b57c-1ffe-4a7c-ab18-2f314c8c1887",
+          "id": "cb077405-b4ea-4ea4-a1cd-37bef5f65669",
           "code": "B-100"
         }
       },
       {
-        "id": "dd464441-f64f-4149-9063-bf244db158ff",
-        "at": "2026-09-13T12:11:09.718Z",
+        "id": "03db60bb-2915-48f7-b4e3-dfd1c6969107",
+        "at": "2026-09-13T13:38:00.579Z",
         "action": "mark.update",
         "detail": {
           "id": "demo-mark-01",
@@ -249,8 +249,8 @@
         }
       },
       {
-        "id": "309a83fd-63c2-4cab-aa93-524808cbff86",
-        "at": "2026-09-13T12:11:09.832Z",
+        "id": "ee698b8c-439f-4438-83a8-e41a409c5bc8",
+        "at": "2026-09-13T13:38:00.691Z",
         "action": "dive.update",
         "detail": {
           "id": "demo-dive-01",
@@ -258,8 +258,8 @@
         }
       },
       {
-        "id": "b5c6cdde-8321-46a5-a3ab-33393bc72000",
-        "at": "2026-09-13T12:11:09.935Z",
+        "id": "4755f813-483b-417d-86da-a65a40e423f3",
+        "at": "2026-09-13T13:38:00.813Z",
         "action": "mark.update",
         "detail": {
           "id": "demo-mark-01",
@@ -267,8 +267,8 @@
         }
       },
       {
-        "id": "b423281f-5381-46a9-9b29-ec4088a31bdc",
-        "at": "2026-09-13T12:11:10.001Z",
+        "id": "061ec24a-efe4-4031-8d62-8f4f9aa5bff7",
+        "at": "2026-09-13T13:38:00.873Z",
         "action": "dive.update",
         "detail": {
           "id": "demo-dive-01",
@@ -276,38 +276,38 @@
         }
       },
       {
-        "id": "0c83fc5f-8eec-4ced-a874-fcc9b2b1d900",
-        "at": "2026-09-13T12:11:14.487Z",
+        "id": "ba62b420-f128-4469-b375-d3f8f19759a9",
+        "at": "2026-09-13T13:38:05.368Z",
         "action": "dive.seal",
         "detail": {
           "diveId": "demo-dive-01",
           "diveCode": "DIVE-01",
-          "code": "4d01767f8f6a",
-          "checksum": "4d01767f8f6a4d6c45f7042d13798514710f42bcea0ef76189a999e71beea16c"
+          "code": "028049a3431d",
+          "checksum": "028049a3431d4faf1b9f19f34951943c4b6a49cae285d3f71ce0c5684b96279f"
         }
       },
       {
-        "id": "ab36f90c-6c9b-41f7-ab40-4f3edcd90b82",
-        "at": "2026-09-13T12:11:14.968Z",
+        "id": "da2fe28a-aab0-4ea5-8351-1ea8234a1119",
+        "at": "2026-09-13T13:38:05.946Z",
         "action": "dive.restore",
         "detail": {
           "diveId": "demo-dive-01",
           "diveCode": "DIVE-01",
           "reason": "界面手动还原",
           "operator": "现场监督林岚",
-          "checksum": "4d01767f8f6a4d6c45f7042d13798514710f42bcea0ef76189a999e71beea16c"
+          "checksum": "028049a3431d4faf1b9f19f34951943c4b6a49cae285d3f71ce0c5684b96279f"
         }
       }
     ]
   },
   "sealChecks": {
     "demo-dive-01": {
-      "code": "4d01767f8f6a",
-      "checksum": "4d01767f8f6a4d6c45f7042d13798514710f42bcea0ef76189a999e71beea16c",
+      "code": "028049a3431d",
+      "checksum": "028049a3431d4faf1b9f19f34951943c4b6a49cae285d3f71ce0c5684b96279f",
       "ok": true,
       "reviewChain": true
     }
   },
-  "checksum": "2d8a5e3573e59a6573a1bd6ebc0dcb6112930d9ac03d94e84d98c071c060e0da",
-  "code": "2d8a5e3573e5"
+  "checksum": "21a341e5c9b69ac9edc48bd22f1b0be6a099164ac1cd1dd1c625778b22630c34",
+  "code": "21a341e5c9b6"
 }

@@ -479,10 +479,12 @@
     return entry;
   };
 
-  Store.prototype.verifyReviewChain = function (diveId) {
-    var seal = this.state.seals[diveId];
+  /** 复查链校验（纯函数，可针对任意状态/审计包内容）：
+   * 链根为封存快照的 SHA-256，逐条 prevHash/hash 复核，任一环断裂即失败。 */
+  function verifyReviewChainState(state, diveId) {
+    var seal = state.seals && state.seals[diveId];
     if (!seal) return { ok: false, reason: "NOT_SEALED" };
-    var list = this.state.reviews[diveId] || [];
+    var list = (state.reviews && state.reviews[diveId]) || [];
     var prev = seal.checksum;
     for (var i = 0; i < list.length; i++) {
       var r = list[i];
@@ -491,23 +493,36 @@
       prev = r.hash;
     }
     return { ok: true, count: list.length };
+  }
+
+  Store.prototype.verifyReviewChain = function (diveId) {
+    return verifyReviewChainState(this.state, diveId);
   };
 
   /** 快照 vs 最新复查（或指定复查）差异；仅现状(condition)变化参与字段差异，
-   * 观测说明(observation)作为独立的「复查观测」列出，不覆盖原标记备注。 */
+   * 观测说明(observation)作为独立的「复查观测」列出，不覆盖原标记备注。
+   * 快照外编号（正常无法写入，仅见于受损数据）不合成新增标记。 */
   Store.prototype.reviewDiff = function (diveId, reviewIndex) {
     var seal = this.state.seals[diveId];
     if (!seal) return null;
     var list = this.state.reviews[diveId] || [];
     var after = JSON.parse(JSON.stringify(seal.snapshot.marks));
+    var snapshotCodes = Object.create(null);
+    after.forEach(function (m) { snapshotCodes[String(m.code || "").trim().toUpperCase()] = true; });
+    var unknown = [];
     var observations = [];
     var upto = reviewIndex == null ? list.length : reviewIndex + 1;
     for (var i = 0; i < upto; i++) {
       (function (review, seq) {
         (review.changes || []).forEach(function (ch) {
+          var key = String(ch.code || "").trim().toUpperCase();
           var m = after.find(function (x) { return x.code === ch.code; });
           if (!m) {
-            after.push({ code: ch.code, condition: ch.condition, note: ch.observation, type: "unknown", depth: "", orientation: "", attribution: "", x: null, y: null });
+            if (snapshotCodes[key]) {
+              // 理论不可达：快照有但 after 被异常改写
+              unknown.push(ch.code);
+            }
+            // 快照外编号：不进入标记差异，只在观测中按原样列出（供甄别受损数据）
           } else if (ch.condition) {
             m.condition = ch.condition;
           }
@@ -517,6 +532,7 @@
     }
     var diff = diffMarks(seal.snapshot.marks, after);
     diff.observations = observations;
+    diff.unknownCodes = unknown;
     return diff;
   };
 
@@ -651,16 +667,31 @@
     if (!basic.ok) return { ok: false, errors: basic.errors };
     var info = await Crypto.checksum({ state: pkg.state, exportedAt: pkg.exportedAt, operator: pkg.operator });
     if (info.full !== pkg.checksum) return { ok: false, errors: ["审计包整体校验码不匹配"] };
-    var sealErrors = [];
-    await Object.keys(pkg.sealChecks || {}).reduce(function (p, id) {
+    var errors = [];
+    var state = pkg.state;
+    await Object.keys(state.seals || {}).reduce(function (p, id) {
       return p.then(async function () {
-        var seal = pkg.state.seals[id];
-        if (!seal) { sealErrors.push("缺少封存记录 " + id); return; }
+        var seal = state.seals[id];
+        if (!seal) { errors.push("缺少封存记录 " + id); return; }
         var ok = await Crypto.verifyChecksum(seal.snapshot, seal.checksum);
-        if (!ok) sealErrors.push("快照校验失败 " + (seal.diveCode || id));
+        if (!ok) errors.push("快照校验失败 " + (seal.diveCode || id));
+        // 复查哈希链：任一环断裂都拒收（重算整包校验码也无法掩盖）
+        var chain = verifyReviewChainState(state, id);
+        if (!chain.ok) errors.push("复查链断裂 " + (seal.diveCode || id) + "（" + chain.reason + "）");
+        // 复查只能引用封存快照内的标记编号
+        var codes = Object.create(null);
+        (seal.snapshot && seal.snapshot.marks || []).forEach(function (m) {
+          codes[String(m.code || "").trim().toUpperCase()] = true;
+        });
+        ((state.reviews && state.reviews[id]) || []).forEach(function (r, ri) {
+          (r.changes || []).forEach(function (ch) {
+            var key = String(ch.code || "").trim().toUpperCase();
+            if (!codes[key]) errors.push("第 " + (ri + 1) + " 条复查引用了快照外标记 " + ch.code + "（" + (seal.diveCode || id) + "）");
+          });
+        });
       });
     }, Promise.resolve());
-    return { ok: sealErrors.length === 0, errors: sealErrors };
+    return { ok: errors.length === 0, errors: errors };
   };
 
   Store.prototype.getQuarantine = function () {

@@ -3,7 +3,7 @@
 - 检查日期：2026-09-13
 - 浏览器：Chromium 153.0.8010.12（Playwright 自带 chrome-headless-shell，arm64，Debian 12）
 - 自动化脚本：`test/browser.test.js`（自带本地 HTTP 服务，端口 8947）
-- 机器化结果：`.browser-check-results.json`（41/41 通过）
+- 机器化结果：`.browser-check-results.json`（48/48 通过）
 - 证据产物：`screenshots/`（截图）、`artifacts/`（实际导出的审计包与坏文件样本）
 - 控制台：全部检查中**无未捕获脚本错误**
 - 另在 `file:///workspace/index.html` 直开方式下单独验证：标记渲染 2 个、`crypto.subtle/randomUUID` 可用、localStorage 落盘正常、无报错——**无需服务器即可离线使用**。
@@ -13,8 +13,8 @@
 ```bash
 npm install
 npx playwright install chromium
-npm test            # 32 项 Node 数据层自动化测试
-npm run browser-test # 41 项真实浏览器检查，输出见本目录
+npm test            # 40 项 Node 数据层自动化测试
+npm run browser-test # 48 项真实浏览器检查，输出见本目录
 ```
 
 > 本机为无 root 的 Debian arm64，Chromium 系统库通过
@@ -84,6 +84,22 @@ npm run browser-test # 41 项真实浏览器检查，输出见本目录
 |---|---|---|
 | 40 | 全部桌面+手机流程浏览器控制台无未捕获错误 | PASS |
 | 41 | file:// 直开离线可用（另测，见上） | PASS |
+
+## 复查与审计包校验加固（追加，2026-09-13）
+
+针对「复查引用快照外编号」与「篡改审计包复查内容后重算整包校验码」两个缺口，新增 7 项检查（合计 48 项）：
+
+| 检查项 | 结果 |
+|---|---|
+| 桌面：复查引用封存快照中不存在的编号 GHOST-9 被拒并提示「不在该潜次的封存快照中」 | PASS |
+| 桌面：被拒复查不写入，复查列表仍为 1 条（内存与本地存储原状） | PASS |
+| 审计包：Node 侧判定——篡改复查正文并重算包级 SHA-256 后仍报「复查链断裂 DIVE-01（BROKEN_AT_0）」 | PASS |
+| 审计包：断链坏包在浏览器导入时被拒，提示复查链断裂 | PASS |
+| 审计包：坏包导入前后 localStorage 主档字节相同（本地存储保持原状） | PASS |
+| 审计包：坏包封存记录未进入界面（封存列表无只读项），原文进隔离区（import-bad-audit） | PASS |
+| 回归：正常审计包往返导入、快照内编号的正常复查不受影响（见上方原有检查项，仍全部 PASS） | PASS |
+
+对应数据层回归（`npm test`，40 项）另含：快照外编号拒绝且不进差异表「新增」、同一复查同编号多条观测要求合并、篡改复查后重算包码仍判链断裂、注入快照外编号复查（重算包码）仍被拒、坏包只隔离不覆盖（内存+存储双原状）、正常审计包往返后复查链仍完整。
 
 ## 截图
 

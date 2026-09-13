@@ -7,6 +7,7 @@ const fs = require("node:fs");
 const fsp = fs.promises;
 const path = require("node:path");
 const Store = require("../js/store.js");
+const Crypto = require("../js/crypto-util.js");
 
 // 无 root 环境：把 tools/sysroot 下所有含 .so 的目录注入子进程库搜索路径
 (function injectSysroot() {
@@ -149,6 +150,16 @@ async function expectThat(label, fn, timeout) {
     await expectThat("桌面：复查链校验完整", async () => (await page.locator(".mono .pill.ok").count()) > 0);
     const diffText = await page.locator("#rvDiff").innerText();
     check("桌面：差异比较显示 B-100 保存状态变化", /B-100[\s\S]*中度劣化/.test(diffText), diffText.replace(/\s+/g, " ").slice(0, 120));
+
+    // 失败路径：引用封存快照中不存在的标记必须被拒，复查条数不变
+    await page.fill("#rvAuthor", "复查员周牧");
+    await page.fill("#rvNote", "试图引用幽灵标记");
+    await page.fill('[data-cr="0"] [data-k="code"]', "GHOST-9");
+    await page.fill('[data-cr="0"] [data-k="observation"]', "不存在");
+    await page.click("#rvSubmit");
+    await expectThat("桌面：快照外编号复查被拒并提示",
+      async () => (await page.locator("#rvSubmitMsg").innerText()).includes("不在该潜次的封存快照中"));
+    check("桌面：被拒复查未写入（仍为 1 条）", await page.locator("#reviewList details").count() === 1);
     await page.screenshot({ path: path.join(SHOTS, "desktop-02-review-diff.png") });
 
     // 6. 坏主档：损坏主文件后刷新 → 横幅 + 备份恢复 + 原文隔离
@@ -220,6 +231,37 @@ async function expectThat(label, fn, timeout) {
     check("高版本：提示隔离并要求用新版打开", banners.includes("STATE_FUTURE_VERSION"), banners.replace(/\s+/g, " ").slice(0, 120));
     await page.click('.tab[data-view="data"]');
     await expectThat("高版本：原文已隔离保留", async () => (await page.locator("#quarantineList details").count()) > 0);
+    await ctx.close();
+  }
+
+  {
+    // 篡改审计包复查内容并重算整包校验码：导入必须隔离拒收，本地状态保持原状
+    const original = JSON.parse(fs.readFileSync(path.join(ART, "dive-audit-desktop.json"), "utf8"));
+    const sealId = Object.keys(original.state.seals)[0];
+    const tampered = JSON.parse(JSON.stringify(original));
+    tampered.state.reviews[sealId][0].note = "被伪造的复查结论";
+    const rc = await Crypto.checksum({ state: tampered.state, exportedAt: tampered.exportedAt, operator: tampered.operator });
+    tampered.checksum = rc.full; tampered.code = rc.code;
+    const tamperedFile = path.join(ART, "dive-audit-tampered.json");
+    fs.writeFileSync(tamperedFile, JSON.stringify(tampered));
+    const nodeVerdict = await Store.verifyAuditPackage(tampered);
+    check("审计包：Node 侧判定重算包码后的复查篡改仍断裂", !nodeVerdict.ok && nodeVerdict.errors.some(e => e.includes("复查链断裂")), nodeVerdict.errors.join(";"));
+
+    const ctx = await browser.newContext({ viewport: { width: 1200, height: 800 } });
+    const page = await ctx.newPage();
+    attach(page);
+    await page.goto(BASE);
+    const beforeRaw = await page.evaluate(() => window.localStorage.getItem("diveArchive.state.v2"));
+    await page.click('.tab[data-view="data"]');
+    await page.setInputFiles("#fileInput", tamperedFile);
+    await expectThat("审计包：断链坏包被拒并提示复查链断裂",
+      async () => (await page.locator(".toast.err").allInnerTexts()).some(t => t.includes("复查链断裂")));
+    const afterRaw = await page.evaluate(() => window.localStorage.getItem("diveArchive.state.v2"));
+    check("审计包：坏包未改动本地存储", beforeRaw === afterRaw);
+    await page.click('.tab[data-view="seal"]');
+    check("审计包：坏包封存记录未进入界面", await page.locator("#diveList .item.sealed").count() === 0);
+    await page.click('.tab[data-view="data"]');
+    await expectThat("审计包：坏包原文进入隔离区", async () => (await page.locator("#quarantineList details").allInnerTexts()).some(t => t.includes("import-bad-audit")));
     await ctx.close();
   }
 

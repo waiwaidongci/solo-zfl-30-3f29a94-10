@@ -236,25 +236,37 @@ test("复查链：追加后校验通过，篡改复查内容即断链", async ()
   assert.equal(store.verifyReviewChain("d1").ok, false);
 });
 
-test("复查差异比较：条件变化、新增标记", async () => {
+test("复查差异比较：仅保存状态变化；快照外编号被拒而非显示新增", async () => {
   const store = storeWith(validState());
   await store.sealDive("d1");
   store.addReview("d1", {
     author: "甲", note: "季度复查",
     changes: [
-      { code: "A-001", observation: "边缘缺损扩大", condition: "中度劣化", action: "加固" },
-      { code: "C-009", observation: "新发现陶片堆", condition: "完好", action: "登记" }
+      { code: "A-001", observation: "边缘缺损扩大", condition: "中度劣化", action: "加固" }
     ]
   });
   const diff = store.reviewDiff("d1");
-  assert.equal(diff.added.length, 1);
-  assert.equal(diff.added[0].code, "C-009");
+  assert.deepEqual(diff.added, [], "复查不能产生「新增标记」");
   const ch = diff.changed.find(c => c.code === "A-001");
   assert.ok(ch);
   assert.ok(ch.fields.some(f => f.field === "condition" && f.from === "完好" && f.to === "中度劣化"));
+  assert.equal(diff.observations.length, 1);
+  assert.equal(diff.observations[0].code, "A-001");
 
   // 封存时的差异应为空
-  assert.deepEqual(store.reviewDiff("d1", -1), { added: [], removed: [], changed: [], observations: [] });
+  assert.deepEqual(store.reviewDiff("d1", -1), { added: [], removed: [], changed: [], observations: [], unknownCodes: [] });
+});
+
+test("diffMarks 纯函数仍能识别两个标记集之间的增删改（还原比较等场景）", () => {
+  const before = [{ code: "A", condition: "好", note: "n", orientation: "东", depth: "1", attribution: "u", type: "ceramic" }];
+  const after = [
+    { code: "A", condition: "差", note: "n", orientation: "东", depth: "1", attribution: "u", type: "ceramic" },
+    { code: "B", condition: "好", note: "", orientation: "", depth: "", attribution: "", type: "unknown" }
+  ];
+  const d = Store.diffMarks(before, after);
+  assert.equal(d.added.length, 1);
+  assert.equal(d.added[0].code, "B");
+  assert.ok(d.changed.some(c => c.code === "A" && c.fields.some(f => f.field === "condition")));
 });
 
 /* ---------------- corruption / restore / backup ---------------- */
@@ -383,6 +395,131 @@ test("备份提升策略：封存后主档损坏，备份恢复仍包含封存�
   const reopened = new Store(storage, { now: clock, demo: false });
   assert.ok(reopened.state.seals.d1, "恢复后封存记录仍在");
   assert.ok(reopened.notices.some(n => n.type === "RESTORED_FROM_BACKUP"));
+});
+
+test("复查引用封存快照中不存在的标记：拒绝且不写入、不显示为新增", async () => {
+  const store = storeWith(validState());
+  await store.sealDive("d1");
+  assert.throws(
+    () => store.addReview("d1", { author: "甲", note: "复查", changes: [{ code: "GHOST-9", observation: "不存在的标记" }] }),
+    /不在该潜次的封存快照中/
+  );
+  assert.equal((store.state.reviews.d1 || []).length, 0, "被拒复查不得写入状态");
+  const diff = store.reviewDiff("d1");
+  assert.deepEqual(diff.added, [], "差异表不得把快照外编号显示成新增标记");
+  assert.deepEqual(diff.observations, []);
+});
+
+test("同一次复查中同一标记多条观测：拒绝并要求合并", async () => {
+  const store = storeWith(validState());
+  await store.sealDive("d1");
+  assert.throws(
+    () => store.addReview("d1", {
+      author: "甲", note: "复查",
+      changes: [
+        { code: "A-001", observation: "观测一" },
+        { code: "a-001", observation: "观测二（大小写视为同一编号）" }
+      ]
+    }),
+    /合并为一条/
+  );
+  assert.equal((store.state.reviews.d1 || []).length, 0);
+});
+
+test("正常复查：快照内编号、缺观测行编号的纯结论复查都可追加", async () => {
+  const store = storeWith(validState());
+  await store.sealDive("d1");
+  const r = store.addReview("d1", { author: "甲", note: "总体良好", changes: [{ code: "A-001", condition: "轻微变化", observation: "边缘附着物略增", action: "监测" }] });
+  assert.equal(r.id && true, true);
+  // 无观测行的纯文字复查同样合法
+  const r2 = store.addReview("d1", { author: "乙", note: "第二次复查，无标记级变化", changes: [] });
+  assert.equal(store.state.reviews.d1.length, 2);
+  const diff = store.reviewDiff("d1");
+  assert.equal(diff.added.length, 0);
+  assert.equal(diff.observations.length, 1);
+  assert.ok(diff.changed.some(c => c.code === "A-001"));
+});
+
+test("审计包：篡改复查内容后重算整包校验码，仍被判定为复查链断裂", async () => {
+  const store = storeWith(validState());
+  await store.sealDive("d1", "甲");
+  store.addReview("d1", { author: "乙", note: "原始复查", changes: [{ code: "A-001", observation: "原始观测" }] });
+  const pkg = await store.exportAuditPackage("甲");
+
+  // 攻击者改写复查正文/观测，并重算包级 SHA-256 以伪造自洽
+  pkg.state.reviews.d1[0].note = "被改写的复查结论";
+  const recomputed = await Crypto.checksum({ state: pkg.state, exportedAt: pkg.exportedAt, operator: pkg.operator });
+  pkg.checksum = recomputed.full;
+  pkg.code = recomputed.code;
+
+  const verdict = await Store.verifyAuditPackage(pkg);
+  assert.equal(verdict.ok, false);
+  assert.ok(verdict.errors.some(e => e.includes("复查链断裂")), JSON.stringify(verdict.errors));
+});
+
+test("审计包：含快照外编号的复查（重算包校验码后）仍被拒", async () => {
+  const store = storeWith(validState());
+  await store.sealDive("d1");
+  store.addReview("d1", { author: "乙", note: "正常复查", changes: [{ code: "A-001", observation: "观测" }] });
+  const pkg = await store.exportAuditPackage();
+
+  // 直接向包内注入一条快照外编号的复查并重算包码
+  const list = pkg.state.reviews.d1;
+  list.push({
+    id: "fake", at: "2026-09-10T00:00:00.000Z", author: "x", note: "n",
+    changes: [{ code: "GHOST-1", observation: "幽灵标记" }],
+    prevHash: list[list.length - 1].hash, hash: "00000000"
+  });
+  const recomputed = await Crypto.checksum({ state: pkg.state, exportedAt: pkg.exportedAt, operator: pkg.operator });
+  pkg.checksum = recomputed.full;
+
+  const verdict = await Store.verifyAuditPackage(pkg);
+  assert.equal(verdict.ok, false);
+  assert.ok(verdict.errors.some(e => e.includes("快照外标记")), JSON.stringify(verdict.errors));
+});
+
+test("审计包导入：链断裂的坏包只隔离不覆盖，内存状态与本地存储均保持原状", async () => {
+  // 先准备一个干净目标库
+  const storage = Store.memoryStorage();
+  const target = new Store(storage, { now: clock, demo: false });
+  target.upsertDive({ code: "DIVE-KEEP", affiliation: "保留单位" });
+  const beforeState = storage.getItem(Store.KEYS.state);
+  const beforeDives = JSON.stringify(target.state.dives);
+
+  // 构造链断裂、包码自洽的坏审计包
+  const src = storeWith(validState());
+  await src.sealDive("d1");
+  src.addReview("d1", { author: "乙", note: "原始", changes: [{ code: "A-001", observation: "o" }] });
+  const badPkg = await src.exportAuditPackage();
+  badPkg.state.reviews.d1[0].note = "改写";
+  const rc = await Crypto.checksum({ state: badPkg.state, exportedAt: badPkg.exportedAt, operator: badPkg.operator });
+  badPkg.checksum = rc.full;
+
+  await assert.rejects(() => target.importJson(JSON.stringify(badPkg)), /复查链断裂/);
+
+  // 内存原状
+  assert.equal(JSON.stringify(target.state.dives), beforeDives, "内存状态未被坏包改动");
+  assert.ok(!target.state.seals.d1, "坏包封存记录不得进入内存");
+  // 本地存储原状
+  assert.equal(storage.getItem(Store.KEYS.state), beforeState, "本地存储主档保持原状");
+  // 原文已隔离
+  const q = target.getQuarantine();
+  assert.ok(q.some(x => x.kind === "import-bad-audit"), "坏审计包原文必须进隔离区");
+});
+
+test("正常审计包往返：链完整时导入成功且复查链可再次验证", async () => {
+  const src = storeWith(validState());
+  await src.sealDive("d1", "甲");
+  src.addReview("d1", { author: "乙", note: "季度复查", changes: [{ code: "A-001", observation: "稳定", condition: "完好" }] });
+  const pkg = await src.exportAuditPackage("甲");
+  assert.equal(pkg.sealChecks.d1.reviewChain, true);
+  assert.equal((await Store.verifyAuditPackage(pkg)).ok, true);
+
+  const target = new Store(Store.memoryStorage(), { now: clock, demo: false });
+  const res = await target.importJson(JSON.stringify(pkg));
+  assert.equal(res.kind, "audit");
+  assert.equal(target.verifyReviewChain("d1").ok, true, "导入后复查链仍完整");
+  assert.equal((await target.verifySeal("d1")).ok, true);
 });
 
 /* ---------------- crypto ---------------- */
