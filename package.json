@@ -1,0 +1,13 @@
+{
+  "name": "dive-seal-archive",
+  "version": "1.0.0",
+  "description": "离线水下考古潜次合规封存与复查台（数据层/界面分离，无运行时依赖）",
+  "private": true,
+  "scripts": {
+    "test": "node --test test/",
+    "browser-test": "node test/browser.test.js"
+  },
+  "devDependencies": {
+    "playwright": "^1.48.0"
+  }
+}

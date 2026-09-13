@@ -1,0 +1,313 @@
+{
+  "package": "audit-v1",
+  "exportedAt": "2026-09-13T12:11:15.067Z",
+  "operator": "现场监督林岚",
+  "state": {
+    "version": 2,
+    "dives": [
+      {
+        "id": "demo-dive-01",
+        "code": "DIVE-01",
+        "site": "一号沉船遗址",
+        "date": "2026-08-02",
+        "affiliation": "省文物考古研究院水下考古中心",
+        "weather": "cloudy",
+        "maxDepth": "20",
+        "duration": "42",
+        "personnel": [
+          {
+            "name": "周牧",
+            "role": "diver",
+            "cert": "SD-2021-044"
+          },
+          {
+            "name": "林岚",
+            "role": "supervisor",
+            "cert": "SS-2019-012"
+          },
+          {
+            "name": "郑海",
+            "role": "recorder",
+            "cert": ""
+          }
+        ],
+        "cylinders": [
+          {
+            "serial": "G-088",
+            "gas": "压缩空气",
+            "pressureStart": "190",
+            "pressureEnd": "70"
+          }
+        ]
+      },
+      {
+        "id": "demo-dive-02",
+        "code": "DIVE-02",
+        "site": "一号沉船遗址",
+        "date": "2026-08-03",
+        "affiliation": "省文物考古研究院水下考古中心",
+        "weather": "sunny",
+        "maxDepth": "22",
+        "duration": "38",
+        "personnel": [
+          {
+            "name": "周牧",
+            "role": "diver",
+            "cert": "SD-2021-044"
+          },
+          {
+            "name": "林岚",
+            "role": "supervisor",
+            "cert": "SS-2019-012"
+          }
+        ],
+        "cylinders": [
+          {
+            "serial": "G-088",
+            "gas": "压缩空气",
+            "pressureStart": "195",
+            "pressureEnd": "85"
+          }
+        ]
+      }
+    ],
+    "marks": [
+      {
+        "id": "demo-mark-02",
+        "code": "W-003",
+        "type": "wood",
+        "dive": "DIVE-02",
+        "x": 58,
+        "y": 39,
+        "depth": "18.2",
+        "orientation": "西北",
+        "condition": "稳定",
+        "attribution": "省文物考古研究院",
+        "refs": [],
+        "note": "疑似横梁"
+      },
+      {
+        "id": "demo-mark-01",
+        "code": "A-017",
+        "type": "ceramic",
+        "dive": "DIVE-01",
+        "x": 42,
+        "y": 46,
+        "depth": "17.8",
+        "orientation": "东",
+        "condition": "边缘残缺",
+        "attribution": "省文物考古研究院",
+        "refs": [],
+        "note": "靠近船肋"
+      },
+      {
+        "id": "3928b57c-1ffe-4a7c-ab18-2f314c8c1887",
+        "code": "B-100",
+        "type": "ceramic",
+        "dive": "DIVE-01",
+        "x": 29.96,
+        "y": 40,
+        "depth": "19",
+        "orientation": "",
+        "condition": "新发现陶片",
+        "attribution": "省文物考古研究院水下考古中心",
+        "refs": [],
+        "note": ""
+      }
+    ],
+    "seals": {
+      "demo-dive-01": {
+        "id": "7eadff60-1aad-4a3d-b060-f71c173f4414",
+        "diveId": "demo-dive-01",
+        "diveCode": "DIVE-01",
+        "sealedAt": "2026-09-13T12:11:14.486Z",
+        "operator": "现场监督林岚",
+        "ruleVersion": "rules-v1",
+        "checksum": "4d01767f8f6a4d6c45f7042d13798514710f42bcea0ef76189a999e71beea16c",
+        "code": "4d01767f8f6a",
+        "canonicalLength": 941,
+        "warnings": [],
+        "snapshot": {
+          "sealedAt": "2026-09-13T12:11:14.486Z",
+          "ruleVersion": "rules-v1",
+          "limits": {
+            "maxDepth": 40,
+            "maxDuration": 60
+          },
+          "dive": {
+            "id": "demo-dive-01",
+            "code": "DIVE-01",
+            "site": "一号沉船遗址",
+            "date": "2026-08-02",
+            "affiliation": "省文物考古研究院水下考古中心",
+            "weather": "cloudy",
+            "maxDepth": "20",
+            "duration": "42",
+            "personnel": [
+              {
+                "name": "周牧",
+                "role": "diver",
+                "cert": "SD-2021-044"
+              },
+              {
+                "name": "林岚",
+                "role": "supervisor",
+                "cert": "SS-2019-012"
+              },
+              {
+                "name": "郑海",
+                "role": "recorder",
+                "cert": ""
+              }
+            ],
+            "cylinders": [
+              {
+                "serial": "G-088",
+                "gas": "压缩空气",
+                "pressureStart": "190",
+                "pressureEnd": "70"
+              }
+            ]
+          },
+          "marks": [
+            {
+              "id": "demo-mark-01",
+              "code": "A-017",
+              "type": "ceramic",
+              "dive": "DIVE-01",
+              "x": 42,
+              "y": 46,
+              "depth": "17.8",
+              "orientation": "东",
+              "condition": "边缘残缺",
+              "attribution": "省文物考古研究院",
+              "refs": [],
+              "note": "靠近船肋"
+            },
+            {
+              "id": "3928b57c-1ffe-4a7c-ab18-2f314c8c1887",
+              "code": "B-100",
+              "type": "ceramic",
+              "dive": "DIVE-01",
+              "x": 29.96,
+              "y": 40,
+              "depth": "19",
+              "orientation": "",
+              "condition": "新发现陶片",
+              "attribution": "省文物考古研究院水下考古中心",
+              "refs": [],
+              "note": ""
+            }
+          ],
+          "warnings": []
+        }
+      }
+    },
+    "reviews": {
+      "demo-dive-01": [
+        {
+          "id": "d48692b3-b2f7-4100-8dab-89d9887de406",
+          "at": "2026-09-13T12:11:14.702Z",
+          "author": "复查员周牧",
+          "note": "季度复查：B-100 附着物增加",
+          "changes": [
+            {
+              "code": "B-100",
+              "observation": "贝类附着扩大，边缘缺损",
+              "condition": "中度劣化",
+              "action": ""
+            }
+          ],
+          "prevHash": "4d01767f8f6a4d6c45f7042d13798514710f42bcea0ef76189a999e71beea16c",
+          "hash": "6566c994"
+        }
+      ]
+    },
+    "auditLog": [
+      {
+        "id": "00a35dd4-2d1b-4c84-8ef9-68df5f5fe8e7",
+        "at": "2026-09-13T12:11:09.511Z",
+        "action": "init/migrate",
+        "detail": {}
+      },
+      {
+        "id": "978c69b9-feb2-4a08-82bd-cb70ecb75c63",
+        "at": "2026-09-13T12:11:09.634Z",
+        "action": "mark.create",
+        "detail": {
+          "id": "3928b57c-1ffe-4a7c-ab18-2f314c8c1887",
+          "code": "B-100"
+        }
+      },
+      {
+        "id": "dd464441-f64f-4149-9063-bf244db158ff",
+        "at": "2026-09-13T12:11:09.718Z",
+        "action": "mark.update",
+        "detail": {
+          "id": "demo-mark-01",
+          "code": "A-017"
+        }
+      },
+      {
+        "id": "309a83fd-63c2-4cab-aa93-524808cbff86",
+        "at": "2026-09-13T12:11:09.832Z",
+        "action": "dive.update",
+        "detail": {
+          "id": "demo-dive-01",
+          "code": "DIVE-01"
+        }
+      },
+      {
+        "id": "b5c6cdde-8321-46a5-a3ab-33393bc72000",
+        "at": "2026-09-13T12:11:09.935Z",
+        "action": "mark.update",
+        "detail": {
+          "id": "demo-mark-01",
+          "code": "A-017"
+        }
+      },
+      {
+        "id": "b423281f-5381-46a9-9b29-ec4088a31bdc",
+        "at": "2026-09-13T12:11:10.001Z",
+        "action": "dive.update",
+        "detail": {
+          "id": "demo-dive-01",
+          "code": "DIVE-01"
+        }
+      },
+      {
+        "id": "0c83fc5f-8eec-4ced-a874-fcc9b2b1d900",
+        "at": "2026-09-13T12:11:14.487Z",
+        "action": "dive.seal",
+        "detail": {
+          "diveId": "demo-dive-01",
+          "diveCode": "DIVE-01",
+          "code": "4d01767f8f6a",
+          "checksum": "4d01767f8f6a4d6c45f7042d13798514710f42bcea0ef76189a999e71beea16c"
+        }
+      },
+      {
+        "id": "ab36f90c-6c9b-41f7-ab40-4f3edcd90b82",
+        "at": "2026-09-13T12:11:14.968Z",
+        "action": "dive.restore",
+        "detail": {
+          "diveId": "demo-dive-01",
+          "diveCode": "DIVE-01",
+          "reason": "界面手动还原",
+          "operator": "现场监督林岚",
+          "checksum": "4d01767f8f6a4d6c45f7042d13798514710f42bcea0ef76189a999e71beea16c"
+        }
+      }
+    ]
+  },
+  "sealChecks": {
+    "demo-dive-01": {
+      "code": "4d01767f8f6a",
+      "checksum": "4d01767f8f6a4d6c45f7042d13798514710f42bcea0ef76189a999e71beea16c",
+      "ok": true,
+      "reviewChain": true
+    }
+  },
+  "checksum": "2d8a5e3573e59a6573a1bd6ebc0dcb6112930d9ac03d94e84d98c071c060e0da",
+  "code": "2d8a5e3573e5"
+}

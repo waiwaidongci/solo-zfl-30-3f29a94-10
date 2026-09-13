@@ -1,0 +1,214 @@
+{
+  "at": "2026-09-13T12:11:20.711Z",
+  "browser": "Chromium 153.0.8010.12",
+  "total": 41,
+  "passed": 41,
+  "failed": 0,
+  "results": [
+    {
+      "name": "桌面：初始地图显示 2 个标记",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "桌面：地图新增标记 B-100 成功提示",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "桌面：保存后地图同步为 3 个标记",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "桌面：时间线按潜次分组并带封存状态",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "桌面：合规检查拦截并列出错误",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "桌面：拦截原因含「跨潜次引用…尚未封存」",
+      "ok": true,
+      "detail": "封存被拦截（1 项） 标记 A-017 跨潜次引用 W-003（属于 DIVE-02，该潜次尚未封存）"
+    },
+    {
+      "name": "桌面：有错误时封存按钮禁用",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "桌面：整改后合规检查通过",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "桌面：封存生成校验码卡片",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "桌面：校验码为 12 位十六进制",
+      "ok": true,
+      "detail": "4d01767f8f6a"
+    },
+    {
+      "name": "桌面：封存快照复算一致",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "桌面：地图以虚线显示已封存标记",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "桌面：已封存标记显示只读横幅",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "桌面：已封存标记保存按钮禁用",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "桌面：复查记录已追加",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "桌面：复查链校验完整",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "桌面：差异比较显示 B-100 保存状态变化",
+      "ok": true,
+      "detail": "累计（第 1 次复查后 vs 封存时） 变化 编号 字段 封存时 复查后 改 B-100 保存状态 新发现陶片 中度劣化 #1 观测 B-100 复查记录 贝类附着扩大，边缘缺损"
+    },
+    {
+      "name": "桌面：坏主档触发损坏横幅",
+      "ok": true,
+      "detail": "[STATE_CORRUPT] 主档 JSON 损坏，已隔离原文：Expected property name or '}' in JSON at position 1 (line 1 column 2) [RESTORED_FROM_BACKUP] 已从上一次自动备份恢复"
+    },
+    {
+      "name": "桌面：自动从备份恢复并提示",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "桌面：坏文件原文进入隔离区可导出",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "桌面：注入的游离标记已出现（还原前）",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "桌面：还原成功提示",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "桌面：还原后游离标记消失",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "桌面：快照内 A-017 保留",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "桌面：审计包整体与快照校验码复算通过",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "桌面：审计包内含封存校验与复查链结论",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "导入：坏 JSON 被拒并提示已隔离",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "导入：坏文件没有覆盖现有数据",
+      "ok": true,
+      "detail": "2 -> 2"
+    },
+    {
+      "name": "高版本：提示隔离并要求用新版打开",
+      "ok": true,
+      "detail": "[STATE_FUTURE_VERSION] 数据来自更新版本(v99)，已隔离保留，请用新版软件打开 [FRESH_STATE] 已建立新日志"
+    },
+    {
+      "name": "高版本：原文已隔离保留",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "审计包：往返导入成功",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "审计包：导入后封存潜次仍标记为只读",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "审计包：导入后封存记录数为 1",
+      "ok": true,
+      "detail": "seals=1"
+    },
+    {
+      "name": "手机：地图标记正常渲染（单列布局）",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "手机：DIVE-02 合规检查通过",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "手机：封存成功并显示校验码",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "手机：复查追加成功",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "手机：差异比较区正常渲染",
+      "ok": true,
+      "detail": "累计（第 1 次复查后 vs 封存时） 变化 编号 字段 封存时 复查后 #1 观测 W-003 复查记录 无新增缺损"
+    },
+    {
+      "name": "手机：导出审计包校验通过",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "手机：快照还原成功",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "浏览器控制台无未捕获脚本错误",
+      "ok": true,
+      "detail": ""
+    }
+  ]
+}
